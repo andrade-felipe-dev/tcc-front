@@ -1,4 +1,5 @@
 <template>
+  
   <NavigationDrawer>
     <v-container fluid>
       <v-row justify="center">
@@ -6,8 +7,8 @@
           <v-textarea v-model="aboutme" label="Digite o texto que irá aparecer no início do aplicativo" rows="33"></v-textarea>
         </v-col>
         <v-col cols="12">
-          <v-card>
-            <v-card-actions flat class="justify-end">
+          <v-card flat>
+            <v-card-actions class="justify-end">
               <v-btn :loading="loading" class="bg-primary" @click="saveAboutMeText()">
                 Salvar
               </v-btn>
@@ -15,6 +16,7 @@
           </v-card>
         </v-col>
       </v-row>
+      
     </v-container>
   </NavigationDrawer>
 </template>
