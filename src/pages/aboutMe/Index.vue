@@ -1,5 +1,5 @@
 <template>
-  
+
   <NavigationDrawer>
     <v-container fluid>
       <v-row justify="center">
@@ -16,7 +16,7 @@
           </v-card>
         </v-col>
       </v-row>
-      
+
     </v-container>
   </NavigationDrawer>
 </template>
@@ -35,7 +35,7 @@ export default {
     async loadAboutMeData() {
       try {
         this.loading = true
-        const response = await axios.get('http://127.0.0.1:8000/api/about-me')  
+        const response = await axios.get('http://127.0.0.1:8000/api/about-me')
         this.aboutme = response.data.data.description
       } catch (error) {
         console.error('Erro ao buscar dados sobre mim:', error)

@@ -24,16 +24,16 @@
 </template>
 
 <script>
-    export default {
-        data: () => ({
-            drawer: true
-        }),
+export default {
+  data: () => ({
+      drawer: true
+  }),
 
-        methods: {
-            loggout() {
-                this.$router.push('/login')
-            }
-        }
+  methods: {
+    loggout() {
+      this.$router.push('/login')
     }
+  }
+}
 </script>
 

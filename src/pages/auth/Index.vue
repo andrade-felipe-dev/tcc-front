@@ -1,42 +1,70 @@
 <template>
   <div id="app">
     <v-app>
-      <v-content>
+      <v-main>
         <div class="container">
           <v-img src="../../assets/logo-unicentro.png"/>
-          <v-text-field type="email" label="E-mail" outlined variant="outlined"/>
-          
-          <v-text-field 
+          <v-text-field v-model="email" type="email" label="E-mail" outlined variant="outlined"/>
+
+          <v-text-field
             label="Senha"
             :type="!showPassword ? 'password' : 'text'"
             required
             append-inner-icon="mdi-eye"
             variant="outlined"
             @click:append-inner="showPassword = !showPassword"
+            v-model="password"
           />
           <v-btn flat class="float-right bg-primary" @click="login">Acessar</v-btn>
         </div>
-      </v-content>
+        <Alert ref="alert" />
+      </v-main>
     </v-app>
   </div>
 </template>
 
 <script>
+import axios from 'axios';
+import Alert from '../../components/Alert.vue';
+
 export default {
-  data () {
+  components: {
+    Alert
+  },
+  data() {
     return {
       email: '',
       password: '',
-      errors: [],
-      showPassword: false
+      showPassword: false,
     };
   },
-
   methods: {
-    login () {
-      this.$router.push('/')
+    async login() {
+      try {
+        const response = await axios.post(
+          'http://127.0.0.1:8000/api/login',
+          { email: this.email, password: this.password }
+        );
+
+        localStorage.setItem('token', response.data.access_token);
+        this.$refs.alert.show('Login bem-sucedido!', 'success');
+        this.$router.push('/');
+      } catch (error) {
+        let message = 'Ocorreu um erro desconhecido.';
+
+        if (error.response && error.response.status === 401) {
+          message = 'E-mail ou senha incorretos.';
+        } else if (error.response && error.response.data) {
+          const apiErrors = error.response.data.errors;
+          if (apiErrors) {
+            message = apiErrors.map((error) => error.message).join(' ');
+          }
+        }
+
+        this.$refs.alert.show(message, 'error');
+      }
     }
-  } 
+  }
 }
 </script>
 
