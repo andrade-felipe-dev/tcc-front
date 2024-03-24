@@ -2,7 +2,7 @@
   <div id="app">
     <v-app>
       <v-main>
-        <div class="container">
+        <div class="container" @keyup.enter="login">
           <v-img src="../../assets/logo-unicentro.png"/>
           <v-text-field v-model="email" type="email" label="E-mail" outlined variant="outlined"/>
 

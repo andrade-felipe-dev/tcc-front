@@ -6,6 +6,14 @@
           :action-button="actionButton"
           :searchable="false"
         >
+          <template v-slot:item.created_at="{ item }">
+            {{ formatDate(item.created_at) }}
+          </template>
+
+          <template v-slot:item.updated_at="{ item }">
+            {{ formatDate(item.updated_at) }}
+          </template>
+
           <template v-slot:button>
             <v-dialog
               v-model="showModal"
@@ -57,10 +65,9 @@
             </template>
           </v-dialog>
         </template>
-
       </DataTable>
 
-
+      <Alert ref="alert" />
     </NavigationDrawer>
 </template>
 
@@ -69,18 +76,15 @@
 <script>
 import NavigationDrawer from '../../components/NavigationDrawer.vue'
 import DataTable from '../../components/DataTable.vue';
+import Alert from '../../components/Alert.vue';
+import api from '../../api/api';
+import { formatDate } from '../../utils/datehelper'
 
 export default {
     components: [
         NavigationDrawer,
         DataTable
     ],
-
-    methods: {
-      store(item) {
-        window.alert(item)
-      }
-    },
 
     data: () => ({
         showModal: false,
@@ -89,36 +93,46 @@ export default {
             text: 'Cadastrar'
         },
         headers: [
-            { key: 'id', title: 'Id.' },
-            { key: 'name', title: 'Categoria' },
+          { key: 'name', title: 'Categoria' },
+          { key: 'created_at', title: 'Criado em' },
+          { key: 'updated_at', title: 'Atualizado em'},
+          { key: 'actions', title: 'Ações' }
         ],
-        items: [
-            {
-                'id': 1,
-                'name': 'Categoria 1',
-
-            },
-            {
-                'id': 2,
-                'name': 'Categoria 2',
-
-            },
-            {
-                'id': 3,
-                'name': 'Categoria 3',
-
-            },
-            {
-                'id': 4,
-                'name': 'Categoria 4',
-
-            },
-            {
-                'id': 5,
-                'name': 'Categoria 5',
-            },
-        ]
+        items: [],
+        options: {
+          page: 1,
+          itemsPerPage: 10,
+        }
     }),
-    components: { DataTable }
+
+    methods: {
+      store(item) {
+        window.alert(item)
+      },
+
+      async loadCategories() {
+        try {
+          const { data } = await api.get('categories')
+          this.items = data.data
+        } catch (error) {
+          this.$refs.alert.show(message, 'error');
+        }
+      },
+
+      formatDate(date) {
+
+        return formatDate(date)
+      }
+    },
+
+
+    components: {
+      DataTable,
+      Alert
+    },
+
+    created() {
+      this.loadCategories()
+    }
 }
 </script>

@@ -5,7 +5,7 @@
                 <v-app-bar-nav-icon/>
                 <v-toolbar-title>Painel Administrativo</v-toolbar-title>
                 <v-spacer/>
-                <v-btn icon="mdi-exit-to-app" @click="loggout"/>
+                <v-btn icon="mdi-exit-to-app" @click="logout"/>
             </v-app-bar>
             <v-navigation-drawer v-model="drawer">
             <v-list>
@@ -30,8 +30,9 @@ export default {
   }),
 
   methods: {
-    loggout() {
-      this.$router.push('/login')
+    logout() {
+      localStorage.removeItem('token');
+      this.$router.push('/login');
     }
   }
 }

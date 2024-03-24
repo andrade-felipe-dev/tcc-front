@@ -12,42 +12,39 @@
       />
 
       <slot name="button"></slot>
-      
+
       <v-data-table
         class="data-table"
         fixed-header
         :headers="headers"
         :items="items"
-        :search.sync="search" 
+        v-model:search="search"
         fixed-footer
         scroll-y
         height="77vh"
         width="100%"
       >
-        <template v-slot:item.action="{item}">
-          <v-icon
-            size="small"
-            @click="checked(item)"
-          >
-              mdi-check
-          </v-icon>
-          <v-icon
-            size="small"
-            @click="reprove(item)"
-          >
-              mdi-close
+        <template v-for="header in headers" v-slot:[`item.${header.key}`]="{ item }">
+          <slot :name="`item.${header.key}`" v-bind="{ item }">
+            {{ item[header.key] }}
+          </slot>
+        </template>
+
+        <template v-slot:item.actions="{ item }">
+          <v-icon size="small" class="mr-2">
+            mdi-pencil
           </v-icon>
         </template>
       </v-data-table>
     </v-container>
   </template>
-  
+
   <script>
   export default {
     data: () => ({
       search: ''
     }),
-    
+
     props: {
       items: {
         type: Array,
@@ -58,7 +55,7 @@
         type: Boolean,
         default: true
       },
-      
+
       headers: {
         type: Array,
         required: true
@@ -75,12 +72,12 @@
         this.$emit('click:action')
       },
 
-      checked(item) {
-        this.$emit('click:check', item)
+      editItem(item) {
+        this.$emit('click:edit', item)
       },
 
-      reprove(item) {
-        this.$emit('click:reprove', item)
+      deleteItem(item) {
+        this.$emit('click:delete', item)
       }
     }
   };
