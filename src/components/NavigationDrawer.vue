@@ -2,7 +2,7 @@
     <div>
         <v-app>
             <v-app-bar app color="primary">
-                <v-app-bar-nav-icon/>
+                <v-app-bar-nav-icon @click="drawer = !drawer"/>
                 <v-toolbar-title>Painel Administrativo</v-toolbar-title>
                 <v-spacer/>
                 <v-btn icon="mdi-exit-to-app" @click="logout"/>
@@ -17,7 +17,7 @@
             </v-list>
             </v-navigation-drawer>
             <v-main class="d-flex justify-center">
-                    <slot></slot>
+              <slot></slot>
             </v-main>
         </v-app>
     </div>

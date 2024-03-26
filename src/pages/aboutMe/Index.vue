@@ -25,6 +25,7 @@
 import NavigationDrawer from '../../components/NavigationDrawer.vue'
 import axios from 'axios'
 import Alert from '../../components/Alert.vue'
+import api from '@/api/api'
 
 export default {
   data: () => ({
@@ -48,11 +49,8 @@ export default {
     async loadAboutMeData() {
       try {
         this.loading = true
-        const response = await axios.get('http://127.0.0.1:8000/api/about-me', {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          }
-        })
+        const response = await api.get('/about-me');
+
         this.aboutme = response.data.data.description
       } catch (error) {
         this.$refs.alert.show('Erro ao buscar dados sobre mim', 'error');

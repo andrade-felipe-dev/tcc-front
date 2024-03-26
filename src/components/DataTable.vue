@@ -13,16 +13,19 @@
 
       <slot name="button"></slot>
 
-      <v-data-table
+      <v-data-table-server
         class="data-table"
         fixed-header
-        :headers="headers"
-        :items="items"
-        v-model:search="search"
-        fixed-footer
         scroll-y
-        height="77vh"
+        fixed-footer
         width="100%"
+        height="77vh"
+        :headers="headers"
+        v-model:items-per-page="options.itemsPerPage"
+        :items="items"
+        :loading="loading"
+        :items-length="options.totalItems"
+        @update:options="updateOptions"
       >
         <template v-for="header in headers" v-slot:[`item.${header.key}`]="{ item }">
           <slot :name="`item.${header.key}`" v-bind="{ item }">
@@ -30,12 +33,16 @@
           </slot>
         </template>
 
-        <template v-slot:item.actions="{ item }">
-          <v-icon size="small" class="mr-2">
+        <template v-if="showActions" v-slot:item.actions="{ item }">
+          <v-icon small class="mr-2" @click="editItem(item)">
             mdi-pencil
           </v-icon>
+
+          <v-icon small @click="deleteItem(item)">
+            mdi-delete
+          </v-icon>
         </template>
-      </v-data-table>
+      </v-data-table-server>
     </v-container>
   </template>
 
@@ -64,6 +71,21 @@
       actionButton: {
         type: Object,
         default: null
+      },
+
+      showActions: {
+        type: Boolean,
+        default: false,
+      },
+
+      options: {
+        required: true,
+        type: Object
+      },
+
+      loading: {
+        type: Boolean,
+        default: false
       }
     },
 
@@ -78,7 +100,17 @@
 
       deleteItem(item) {
         this.$emit('click:delete', item)
-      }
-    }
+      },
+
+      updateOptions(newOptions) {
+        this.$emit('update:options', newOptions);
+      },
+    },
+
+    computed: {
+      totalItems() {
+        return this.options?.totalItems || this.items?.length;
+      },
+    },
   };
   </script>
